@@ -9,17 +9,23 @@ class UserView extends Component
 {
     public $users;
     public $search;
-    protected $listeners = ['refreshUserTable' => 'mount'];
+    public $deleteId;
 
     public function mount()
     {
         $this->users = $this->searchQuery();
     }
 
-    public function deleteUser($id)
+    public function setDeleteId($id)
     {
-        User::whereId($id)->delete();
-        $this->emit('refreshUserTable');
+        $this->deleteId = $id;
+        $this->dispatchBrowserEvent('pop-dialog');
+    }
+
+    public function deleteUser()
+    {
+        User::whereId($this->deleteId)->delete();
+        $this->dispatchBrowserEvent('pop-close-dialog');
     }
 
     public function searchQuery()

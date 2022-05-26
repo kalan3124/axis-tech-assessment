@@ -8,6 +8,7 @@ use Livewire\Component;
 class CourseView extends Component
 {
     public $courses = [];
+    public $deleteId;
     public $usersCourse = [];
     public $search;
     protected $listeners = ['refreshTable' => 'mount'];
@@ -32,10 +33,16 @@ class CourseView extends Component
         $this->courses =  $this->searchQuery();
     }
 
-    public function deleteCourse($id)
+    public function setDeleteId($id)
     {
-        Course::whereId($id)->delete();
-        $this->emit('refreshTable');
+        $this->deleteId = $id;
+        $this->dispatchBrowserEvent('pop-dialog');
+    }
+
+    public function deleteCourse()
+    {
+        Course::whereId($this->deleteId)->delete();
+        $this->dispatchBrowserEvent('pop-close-dialog');
     }
 
     public function getPartUsers($data)
