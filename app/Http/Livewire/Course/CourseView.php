@@ -10,6 +10,7 @@ class CourseView extends Component
     public $courses = [];
     public $deleteId;
     public $usersCourse = [];
+    public $courseUsers = [];
     public $search;
     protected $listeners = ['refreshTable' => 'mount'];
 
@@ -49,6 +50,12 @@ class CourseView extends Component
     {
         $this->usersCourse = $data;
         $this->dispatchBrowserEvent('show-users-course-modal');
+    }
+
+    public function getCourseUsers($id)
+    {
+        $this->courseUsers = Course::with('users')->whereId($id)->first()->users;
+        $this->dispatchBrowserEvent('show-course-users-modal');
     }
 
     public function editCourse(Course $course)
